@@ -1,0 +1,19 @@
+{
+  "rows": 32561,
+  "n_columns": 13,
+  "source": "adult.csv",
+  "class_balance": {
+    "<=50K": 0.7591904425539756,
+    ">50K": 0.2408095574460244
+  },
+  "missing": {},
+  "duplicates": 3465,
+  "insights": [
+    "Class imbalance: only 24.1% of people earn >50K, so accuracy alone is misleading; we also report F1 and ROC-AUC.",
+    "Numeric feature most correlated with high income: education_num (r=0.34); next: age (r=0.23).",
+    "Share earning >50K by sex: Female: 10.9%, Male: 30.6%.",
+    "Married people earn >50K in 43.7% of cases vs 6.4% for others.",
+    "Income rises strongly with education years: (0, 8]: 6%, (8, 10]: 17%, (10, 12]: 26%, (12, 16]: 48%.",
+    "capital_gain/capital_loss are zero for 92% / 95% of people (very skewed) -> log / indicator features were engineered."
+  ]
+}

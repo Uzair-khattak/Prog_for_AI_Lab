@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+.ipynb_checkpoints/
+data/**/*.csv
+data/q2_intel/*
+!data/q2_intel/PUT_INTEL_FOLDERS_HERE.txt
+*.npz
+models/*.joblib
+Q3/deploy_hf/models/*.joblib

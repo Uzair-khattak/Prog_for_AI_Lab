@@ -1,0 +1,48 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "1) Setup environment (create venv + install packages)",
+      "type": "shell",
+      "command": "setup_env.bat nopause",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "panel": "dedicated", "reveal": "always", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "2) Check environment and datasets",
+      "type": "shell",
+      "command": "${workspaceFolder}\\venv\\Scripts\\python.exe check_env.py",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "panel": "dedicated", "reveal": "always", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "3) Start API (FastAPI, port 8000)",
+      "type": "shell",
+      "command": "${workspaceFolder}\\venv\\Scripts\\python.exe -m uvicorn main:app --port 8000 --app-dir Q3/api",
+      "options": { "cwd": "${workspaceFolder}" },
+      "isBackground": true,
+      "presentation": { "panel": "dedicated", "reveal": "always", "group": "q3" },
+      "problemMatcher": []
+    },
+    {
+      "label": "4) Start Streamlit app (port 8501)",
+      "type": "shell",
+      "command": "${workspaceFolder}\\venv\\Scripts\\python.exe -m streamlit run Q3/app/streamlit_app.py",
+      "options": { "cwd": "${workspaceFolder}" },
+      "isBackground": true,
+      "presentation": { "panel": "dedicated", "reveal": "always", "group": "q3" },
+      "problemMatcher": []
+    },
+    {
+      "label": "5) Start API + Streamlit together",
+      "dependsOn": [
+        "3) Start API (FastAPI, port 8000)",
+        "4) Start Streamlit app (port 8501)"
+      ],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "learning_rate": [
+    {
+      "alpha": 0.001,
+      "final cost after 300 it.": 513135727.75105274,
+      "status": "converging"
+    },
+    {
+      "alpha": 0.01,
+      "final cost after 300 it.": 5455282.958143019,
+      "status": "converging"
+    },
+    {
+      "alpha": 0.03,
+      "final cost after 300 it.": 2954195.51622106,
+      "status": "converging"
+    },
+    {
+      "alpha": 0.1,
+      "final cost after 300 it.": 2953974.0659226286,
+      "status": "converging"
+    },
+    {
+      "alpha": 0.3,
+      "final cost after 300 it.": 2953974.06592263,
+      "status": "converging"
+    },
+    {
+      "alpha": 1.0,
+      "final cost after 300 it.": 2953974.0659226296,
+      "status": "converging"
+    },
+    {
+      "alpha": 3.0,
+      "final cost after 300 it.": 3.821381182547468e+30,
+      "status": "DIVERGED"
+    }
+  ],
+  "scaling": [
+    {
+      "scaling": "none",
+      "largest stable alpha": 0.0005247914056339211,
+      "iterations to reach 1% of optimum": ">5000",
+      "test MSE after 5000 it.": 91760333.99566358,
+      "test MSE closed-form": 753796.7693734434
+    },
+    {
+      "scaling": "minmax",
+      "largest stable alpha": 0.7164037004539215,
+      "iterations to reach 1% of optimum": 139,
+      "test MSE after 5000 it.": 753796.7693734556,
+      "test MSE closed-form": 753796.7693734623
+    },
+    {
+      "scaling": "standard",
+      "largest stable alpha": 0.6825537314734731,
+      "iterations to reach 1% of optimum": 8,
+      "test MSE after 5000 it.": 753796.7693734544,
+      "test MSE closed-form": 753796.7693734544
+    }
+  ],
+  "lambda": [
+    {
+      "lambda": 0,
+      "train MSE": 1739507.556148443,
+      "test MSE": 753796.7693734339,
+      "||theta[1:]||": 8511.372777689623,
+      "GD vs closed-form gap": 2.9103830456733704e-11
+    },
+    {
+      "lambda": 0.01,
+      "train MSE": 1739547.0555312696,
+      "test MSE": 755622.0518028057,
+      "||theta[1:]||": 8503.940485355866,
+      "GD vs closed-form gap": 2.9103830456733704e-11
+    },
+    {
+      "lambda": 0.1,
+      "train MSE": 1743385.7962176923,
+      "test MSE": 772533.8775818694,
+      "||theta[1:]||": 8437.777024544961,
+      "GD vs closed-form gap": 2.9103830456733704e-11
+    },
+    {
+      "lambda": 1,
+      "train MSE": 2065877.7409185874,
+      "test MSE": 990779.0255920382,
+      "||theta[1:]||": 7840.479976049084,
+      "GD vs closed-form gap": 2.9103830456733704e-11
+    },
+    {
+      "lambda": 10,
+      "train MSE": 12292276.637147648,
+      "test MSE": 6947101.759839157,
+      "||theta[1:]||": 4838.857831253285,
+      "GD vs closed-form gap": 3.637978807091713e-11
+    },
+    {
+      "lambda": 100,
+      "train MSE": 49206189.96398799,
+      "test MSE": 52985223.898931555,
+      "||theta[1:]||": 1143.620250838282,
+      "GD vs closed-form gap": 3.637978807091713e-11
+    },
+    {
+      "lambda": 1000,
+      "train MSE": 1.7942839885842266e+29,
+      "test MSE": 4.273511942243093e+29,
+      "||theta[1:]||": 362070515576835.0,
+      "GD vs closed-form gap": 324812631006667.75
+    },
+    {
+      "lambda": 10000,
+      "train MSE": 1.07427708853067e+31,
+      "test MSE": 2.407997616146194e+31,
+      "||theta[1:]||": 2862564471819741.5,
+      "GD vs closed-form gap": 2672722032072018.5
+    }
+  ],
+  "overfit_stress_test": {
+    "degree": 3,
+    "n_train": 16,
+    "n_params": 10,
+    "rows": [
+      {
+        "lambda": 0,
+        "train MSE": 274785.392798037,
+        "test MSE": 5640428.246673209
+      },
+      {
+        "lambda": 0.001,
+        "train MSE": 333576.9600104125,
+        "test MSE": 4360968.802970574
+      },
+      {
+        "lambda": 0.01,
+        "train MSE": 584084.9443677674,
+        "test MSE": 1145809.5564181306
+      },
+      {
+        "lambda": 0.1,
+        "train MSE": 1492218.1991689848,
+        "test MSE": 1329555.2600371037
+      },
+      {
+        "lambda": 1,
+        "train MSE": 2363381.839272786,
+        "test MSE": 3490745.344174442
+      },
+      {
+        "lambda": 10,
+        "train MSE": 6166129.984142818,
+        "test MSE": 11703018.271316398
+      },
+      {
+        "lambda": 100,
+        "train MSE": 24842103.985216647,
+        "test MSE": 30579749.46644003
+      },
+      {
+        "lambda": 1000,
+        "train MSE": 57243183.721071854,
+        "test MSE": 70874556.46812198
+      }
+    ],
+    "best_lambda": 0.01
+  }
+}

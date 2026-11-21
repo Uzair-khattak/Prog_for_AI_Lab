@@ -1,0 +1,305 @@
+{
+  "dataset": {
+    "name": "Intel Image Classification",
+    "classes": [
+      "buildings",
+      "forest",
+      "glacier",
+      "mountain",
+      "sea",
+      "street"
+    ],
+    "n_train": 14034,
+    "n_test": 3000,
+    "image_size": 32,
+    "feature_mode": "pixels",
+    "n_features": 3072,
+    "pca_components_svm": 100,
+    "max_per_class": null,
+    "train_per_class": [
+      2191,
+      2271,
+      2404,
+      2512,
+      2274,
+      2382
+    ],
+    "test_per_class": [
+      437,
+      474,
+      553,
+      525,
+      510,
+      501
+    ]
+  },
+  "preprocessing": "Official train/test split; images resized to 32x32 RGB, scaled to [0,1], flattened (3072 features). SVM: StandardScaler + PCA(100).",
+  "sweep_raw": [
+    {
+      "n_estimators": 1,
+      "seed": 0,
+      "test_accuracy": 0.4033333333333333,
+      "train_accuracy": 0.7792503919053727,
+      "oob_accuracy": NaN,
+      "train_time_s": 0.8184288000047673
+    },
+    {
+      "n_estimators": 1,
+      "seed": 1,
+      "test_accuracy": 0.3943333333333333,
+      "train_accuracy": 0.7837394898104603,
+      "oob_accuracy": NaN,
+      "train_time_s": 0.8006530999846291
+    },
+    {
+      "n_estimators": 1,
+      "seed": 2,
+      "test_accuracy": 0.413,
+      "train_accuracy": 0.7830269345874306,
+      "oob_accuracy": NaN,
+      "train_time_s": 0.6898400000063702
+    },
+    {
+      "n_estimators": 10,
+      "seed": 0,
+      "test_accuracy": 0.5226666666666666,
+      "train_accuracy": 0.9880290722530997,
+      "oob_accuracy": 0.45988314094342314,
+      "train_time_s": 3.2832832999993116
+    },
+    {
+      "n_estimators": 10,
+      "seed": 1,
+      "test_accuracy": 0.5316666666666666,
+      "train_accuracy": 0.9908792931452187,
+      "oob_accuracy": 0.45810175288584865,
+      "train_time_s": 3.3664346000005025
+    },
+    {
+      "n_estimators": 10,
+      "seed": 2,
+      "test_accuracy": 0.531,
+      "train_accuracy": 0.9898104603106741,
+      "oob_accuracy": 0.4542539546814878,
+      "train_time_s": 3.371623000013642
+    },
+    {
+      "n_estimators": 50,
+      "seed": 0,
+      "test_accuracy": 0.5966666666666667,
+      "train_accuracy": 0.9992161892546673,
+      "oob_accuracy": 0.5685478124554653,
+      "train_time_s": 16.402836399996886
+    },
+    {
+      "n_estimators": 50,
+      "seed": 1,
+      "test_accuracy": 0.5906666666666667,
+      "train_accuracy": 0.9992161892546673,
+      "oob_accuracy": 0.5676927461878296,
+      "train_time_s": 17.878359399997862
+    },
+    {
+      "n_estimators": 50,
+      "seed": 2,
+      "test_accuracy": 0.5866666666666667,
+      "train_accuracy": 0.9992874447769702,
+      "oob_accuracy": 0.5655550805187401,
+      "train_time_s": 15.983904799999436
+    },
+    {
+      "n_estimators": 100,
+      "seed": 0,
+      "test_accuracy": 0.6056666666666667,
+      "train_accuracy": 0.9992874447769702,
+      "oob_accuracy": 0.5922759013823571,
+      "train_time_s": 32.99292679998325
+    },
+    {
+      "n_estimators": 100,
+      "seed": 1,
+      "test_accuracy": 0.6036666666666667,
+      "train_accuracy": 0.9992874447769702,
+      "oob_accuracy": 0.5884281031779963,
+      "train_time_s": 33.12511320001795
+    },
+    {
+      "n_estimators": 100,
+      "seed": 2,
+      "test_accuracy": 0.61,
+      "train_accuracy": 0.9992874447769702,
+      "oob_accuracy": 0.5924184124269631,
+      "train_time_s": 36.620927499985555
+    },
+    {
+      "n_estimators": 300,
+      "seed": 0,
+      "test_accuracy": 0.6183333333333333,
+      "train_accuracy": 0.9992874447769702,
+      "oob_accuracy": 0.6118711700156763,
+      "train_time_s": 96.83613509999122
+    },
+    {
+      "n_estimators": 300,
+      "seed": 1,
+      "test_accuracy": 0.6143333333333333,
+      "train_accuracy": 0.9992874447769702,
+      "oob_accuracy": 0.6138663246401597,
+      "train_time_s": 105.48158400002285
+    },
+    {
+      "n_estimators": 300,
+      "seed": 2,
+      "test_accuracy": 0.6106666666666667,
+      "train_accuracy": 0.9992874447769702,
+      "oob_accuracy": 0.6153626906085221,
+      "train_time_s": 99.39449620002415
+    }
+  ],
+  "sweep_summary": [
+    {
+      "n_estimators": 1,
+      "test_acc_mean": 0.4035555555555555,
+      "test_acc_std": 0.009335317249464422,
+      "train_acc_mean": 0.7820056054344212,
+      "oob_acc_mean": NaN,
+      "train_time_mean": 0.7696406333319222
+    },
+    {
+      "n_estimators": 10,
+      "test_acc_mean": 0.5284444444444444,
+      "test_acc_std": 0.005014792931731955,
+      "train_acc_mean": 0.9895729419029974,
+      "oob_acc_mean": 0.4574129495035866,
+      "train_time_mean": 3.340446966671152
+    },
+    {
+      "n_estimators": 50,
+      "test_acc_mean": 0.5913333333333334,
+      "test_acc_std": 0.0050332229568471835,
+      "train_acc_mean": 0.9992399410954348,
+      "oob_acc_mean": 0.5672652130540117,
+      "train_time_mean": 16.755033533331396
+    },
+    {
+      "n_estimators": 100,
+      "test_acc_mean": 0.6064444444444445,
+      "test_acc_std": 0.0032375116187407524,
+      "train_acc_mean": 0.9992874447769702,
+      "oob_acc_mean": 0.5910408056624389,
+      "train_time_mean": 34.246322499995586
+    },
+    {
+      "n_estimators": 300,
+      "test_acc_mean": 0.6144444444444445,
+      "test_acc_std": 0.003834540872608291,
+      "train_acc_mean": 0.9992874447769702,
+      "oob_acc_mean": 0.613700061754786,
+      "train_time_mean": 100.57073843334608
+    }
+  ],
+  "dt_vs_rf": [
+    {
+      "model": "Decision Tree (default)",
+      "accuracy": 0.446,
+      "precision": 0.446040074692654,
+      "recall": 0.4464087762244761,
+      "f1": 0.4459279307863284,
+      "train_time_s": 152.5699522000068,
+      "predict_time_s": 0.026017500000307336,
+      "roc_auc": 0.6679232607762332
+    },
+    {
+      "model": "Random Forest (default, 100 trees)",
+      "accuracy": 0.6006666666666667,
+      "precision": 0.5947506788816185,
+      "recall": 0.5983639864390056,
+      "f1": 0.592425125028257,
+      "train_time_s": 79.39315730001545,
+      "predict_time_s": 0.2534678999800235,
+      "roc_auc": 0.8783929034817476
+    }
+  ],
+  "comparison": [
+    {
+      "model": "Decision Tree (default)",
+      "accuracy": 0.446,
+      "precision": 0.446040074692654,
+      "recall": 0.4464087762244761,
+      "f1": 0.4459279307863284,
+      "train_time_s": 152.5699522000068,
+      "predict_time_s": 0.026017500000307336,
+      "roc_auc": 0.6679232607762332
+    },
+    {
+      "model": "Random Forest (default, 100 trees)",
+      "accuracy": 0.6006666666666667,
+      "precision": 0.5947506788816185,
+      "recall": 0.5983639864390056,
+      "f1": 0.592425125028257,
+      "train_time_s": 79.39315730001545,
+      "predict_time_s": 0.2534678999800235,
+      "roc_auc": 0.8783929034817476
+    },
+    {
+      "model": "SVM (RBF + PCA-100)",
+      "accuracy": 0.6476666666666666,
+      "precision": 0.645653677036469,
+      "recall": 0.6463479481188633,
+      "f1": 0.6424697618995393,
+      "train_time_s": 41.54297979999683,
+      "predict_time_s": 13.5136001999781,
+      "roc_auc": null
+    }
+  ],
+  "rf_per_class": {
+    "buildings": {
+      "precision": 0.4931506849315068,
+      "recall": 0.41189931350114417,
+      "f1-score": 0.4488778054862843,
+      "support": 437.0
+    },
+    "forest": {
+      "precision": 0.7137546468401487,
+      "recall": 0.810126582278481,
+      "f1-score": 0.758893280632411,
+      "support": 474.0
+    },
+    "glacier": {
+      "precision": 0.5711892797319933,
+      "recall": 0.6166365280289331,
+      "f1-score": 0.5930434782608696,
+      "support": 553.0
+    },
+    "mountain": {
+      "precision": 0.5672131147540984,
+      "recall": 0.659047619047619,
+      "f1-score": 0.6096916299559472,
+      "support": 525.0
+    },
+    "sea": {
+      "precision": 0.5698630136986301,
+      "recall": 0.40784313725490196,
+      "f1-score": 0.4754285714285714,
+      "support": 510.0
+    },
+    "street": {
+      "precision": 0.6533333333333333,
+      "recall": 0.6846307385229541,
+      "f1-score": 0.6686159844054581,
+      "support": 501.0
+    }
+  },
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "n_list": [
+    1,
+    10,
+    50,
+    100,
+    300
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "dataset": {
+    "file": "multiple_linear_regression_dataset.csv",
+    "rows": 20,
+    "n_features": 2,
+    "features": [
+      "age",
+      "experience"
+    ],
+    "target": "income",
+    "n_train": 16,
+    "n_test": 4
+  },
+  "config": {
+    "scaling": "standard",
+    "alpha": 0.1,
+    "lambda": 1.0,
+    "n_iters": 2000,
+    "test_size": 0.2,
+    "seed": 42
+  },
+  "gd": {
+    "iterations_run": 2000,
+    "initial_cost": 933602325.0,
+    "final_cost": 2953974.0659226263,
+    "time_s": 0.20297600000048988,
+    "max_diff_vs_closed_form": 2.9103830456733704e-11
+  },
+  "theta_scaled": {
+    "intercept": 42426.24999999997,
+    "age": -550.5410779441961,
+    "experience": 7821.127206248642
+  },
+  "theta_original_units": {
+    "intercept": 31015.611058195762,
+    "age": -62.899728263918156,
+    "experience": 1990.8375214048513
+  },
+  "theta_lambda0_original_units": {
+    "intercept": 31465.05641850391,
+    "age": -101.05923350088713,
+    "experience": 2154.8054927746452
+  },
+  "theta_sklearn_original_units": {
+    "intercept": 31465.056418503937,
+    "age": -101.05923350088727,
+    "experience": 2154.805492774646
+  },
+  "metrics": {
+    "Ours (GD, \u03bb=1.0)": {
+      "train_mse": 2065877.7409185874,
+      "test_mse": 990779.0255920382,
+      "test_r2": 0.9194411231085068
+    },
+    "Ours (GD, \u03bb=0)": {
+      "train_mse": 1739507.556148443,
+      "test_mse": 753796.7693734339,
+      "test_r2": 0.9387098237077903
+    },
+    "scikit-learn LinearRegression": {
+      "train_mse": 1739507.5561484373,
+      "test_mse": 753796.7693734535,
+      "test_r2": 0.9387098237077888
+    }
+  },
+  "sklearn_time_s": 0.01577769999857992
+}

@@ -1,0 +1,19 @@
+{
+  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+  "python.defaultInterpreterPath": "${workspaceFolder}\\venv\\Scripts\\python.exe",
+  "python.terminal.activateEnvironment": true,
+  "python.analysis.extraPaths": ["${workspaceFolder}/src"],
+  "jupyter.notebookFileRoot": "${fileDirname}",
+  "jupyter.askForKernelRestart": false,
+  "notebook.output.textLineLimit": 60,
+  "notebook.formatOnSave.enabled": false,
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.ipynb_checkpoints": true
+  },
+  "search.exclude": {
+    "venv": true,
+    "results": true
+  },
+  "files.autoSave": "afterDelay"
+}
