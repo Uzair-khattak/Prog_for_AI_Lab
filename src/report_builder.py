@@ -19,6 +19,10 @@ for _p in [Path(__file__).resolve().parent, *Path(__file__).resolve().parents]:
         break
 RES, REP = ROOT / "results", ROOT / "reports"
 
+import sys
+sys.path.insert(0, str(ROOT / "src"))
+import report_text as T
+
 
 def _load(path, default=None):
     p = Path(path)
@@ -124,6 +128,17 @@ def figure(d, path, caption, width=6.2):
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
 
+
+def _add_img(d, path, max_w=6.0, max_h=8.0):
+    """Insert an image scaled to fit BOTH max width and max height (tall phone photos would otherwise run off the page)."""
+    from PIL import Image
+    with Image.open(path) as im:
+        w, h = im.size
+    width = min(max_w, max_h * w / h)
+    d.add_picture(str(path), width=Inches(width))
+    d.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+
 def images_from(d, folder, caption_prefix, width=6.0):
     exts = {".jpg", ".jpeg", ".png"}
     files = sorted(f for f in Path(folder).glob("*") if f.suffix.lower() in exts) if Path(folder).exists() else []
@@ -131,8 +146,7 @@ def images_from(d, folder, caption_prefix, width=6.0):
         para(d, f"[INSERT YOUR SCANNED / PHOTOGRAPHED IMAGES HERE – put them in {Path(folder).relative_to(ROOT)} and re-run the builder]",
              bold=True)
     for i, f in enumerate(files, 1):
-        d.add_picture(str(f), width=Inches(width))
-        d.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+        _add_img(d, f, width, 8.0)
         para(d, f"{caption_prefix} {i}", italic=True, size=9.5).alignment = WD_ALIGN_PARAGRAPH.CENTER
 
 
@@ -173,14 +187,7 @@ def build_q1():
     sc_rows = {r["scaling"]: r for r in E["scaling"]}
     s_it = sc_rows.get("standard", {}).get("iterations to reach 1% of optimum")
     n_it = sc_rows.get("none", {}).get("iterations to reach 1% of optimum")
-    bullets(d, [
-        f"Feature scaling – {sc_name}: the features have very different ranges; with scaling every feature has comparable magnitude, the cost surface is "
-        f"round instead of elongated and a much larger learning rate can be used. Scaling parameters are learned on the training set only (no leakage). "
-        f"In our experiment standardisation needed {s_it} iterations to get within 1 % of the optimum, without scaling more than {n_it if n_it != '>5000' else '5000'} were needed.",
-        f"Learning rate α = {cfg['alpha']}: chosen from the learning-rate experiment – it converges quickly and smoothly and is safely below the value at which the cost diverges.",
-        f"Regularisation λ = {cfg['lambda']}: a small value that stabilises the weights without noticeably biasing them (see the λ experiment).",
-        f"Iterations: {cfg['n_iters']} – the cost curve is flat long before that (final cost {R['gd']['final_cost']:.6g}).",
-    ])
+    bullets(d, T.Q1_CHOICES)
 
     d.add_heading("4. Results", 1)
     figure(d, f / "convergence.png", "Figure 1 – Convergence curve (cost vs iterations), linear and log scale.")
@@ -201,43 +208,16 @@ def build_q1():
     table(d, E["scaling"])
     figure(d, f / "exp_lambda.png", "Figure 5 – Effect of λ on train/test MSE and on the size of the weights.")
     table(d, E["lambda"])
+    para(d, T.Q1_LAMBDA_NOTE, italic=True, size=9.5)
     figure(d, f / "exp_overfit.png", "Figure 6 – Over-fitting stress test (polynomial features, small training set).")
     st = E["overfit_stress_test"]
     para(d, f"Stress test set-up: polynomial degree {st['degree']}, {st['n_train']} training examples, {st['n_params']} parameters.")
     table(d, st["rows"])
 
-    d.add_heading("6. Discussion (draft – rewrite in your own words)", 1)
-    lr = E["learning_rate"]
-    div = [r["alpha"] for r in lr if r["status"] == "DIVERGED"]
-    slow = lr[0]
-    best_lam = min(E["lambda"], key=lambda r: r["test MSE"])
-    big_lam = E["lambda"][-1]
-    lam0 = E["lambda"][0]
-    s0 = st["rows"][0]
-    sbest = min(st["rows"], key=lambda r: r["test MSE"])
-    m = R["metrics"]
-    ours = m[[k for k in m if k.startswith("Ours (GD, λ=") and "λ=0" not in k][0]]
-    ours0, skm = m["Ours (GD, λ=0)"], m["scikit-learn LinearRegression"]
-    para(d, "Learning rate. ", bold=True)
-    para(d, f"A very small α (= {slow['alpha']}) is stable but slow – after 300 iterations the cost was still {slow['final cost after 300 it.']:.4g}. "
-            f"Moderate values (about 0.03–1 for scaled data) reach the minimum within a few hundred iterations. "
-            + (f"Values of α ≥ {min(div)} made the cost explode (divergence), because the steps overshoot the minimum. " if div else "")
-            + "The learning rate must therefore be large enough to be fast and small enough to be stable.")
-    para(d, "Feature scaling. ", bold=True)
-    para(d, f"Scaling changes the shape of the cost surface. Without scaling the largest stable learning rate is tiny "
-            f"({sc_rows['none']['largest stable alpha']:.2g}) and the algorithm needs {sc_rows['none']['iterations to reach 1% of optimum']} iterations, "
-            f"with min-max scaling {sc_rows['minmax']['iterations to reach 1% of optimum']} and with standardisation only "
-            f"{sc_rows['standard']['iterations to reach 1% of optimum']}. The final solution is the same, only the speed differs.")
-    para(d, "Regularisation λ and under-/over-fitting. ", bold=True)
-    para(d, f"On the original data a linear model has few parameters, so it is not over-fitted: with λ = 0 the test MSE is {lam0['test MSE']:.4g}, the best λ ({best_lam['lambda']}) gives "
-            f"{best_lam['test MSE']:.4g}. When λ is far too large (λ = {big_lam['lambda']}) all weights are pushed towards 0, train and test MSE rise to "
-            f"{big_lam['train MSE']:.4g} / {big_lam['test MSE']:.4g} – this is UNDER-fitting (high bias). "
-            f"In the stress test (many polynomial features, few examples) λ = 0 gives train MSE {s0['train MSE']:.3g} but test MSE {s0['test MSE']:.4g} – clear OVER-fitting (high variance); "
-            f"the best λ ({sbest['lambda']}) reduces the test MSE to {sbest['test MSE']:.4g}.")
-    para(d, "Comparison with scikit-learn. ", bold=True)
-    para(d, f"With λ = 0 our gradient-descent model reaches test MSE {ours0['test_mse']:.6g} versus {skm['test_mse']:.6g} for LinearRegression – practically identical, and the "
-            f"parameters coincide. With λ = {cfg['lambda']} our test MSE is {ours['test_mse']:.6g}; the small difference is the (intended) bias introduced by regularisation. "
-            f"scikit-learn is faster because it solves the least-squares problem directly instead of iterating.")
+    d.add_heading("6. Discussion", 1)
+    for head, txt in T.Q1_DISCUSSION:
+        para(d, head + ". ", bold=True)
+        para(d, txt)
 
     d.add_heading("7. Conclusion", 1)
     para(d, "The derived gradients were verified numerically, the from-scratch implementation converges to the closed-form optimum and matches scikit-learn, "
@@ -326,8 +306,8 @@ def build_q2():
     d.add_heading("1. Summary of Breiman's main ideas and claims", 1)
     bullets(d, BREIMAN)
 
-    d.add_heading("2. Part A – Why Random Forests work (draft – rewrite in your own words)", 1)
-    for head, txt in PART_A:
+    d.add_heading("2. Part A – Why Random Forests work", 1)
+    for head, txt in T.Q2_PART_A:
         para(d, head, bold=True)
         para(d, txt)
 
@@ -337,6 +317,7 @@ def build_q2():
     para(d, f"{hd['rows']} patients, {hd['n_features']} features ({len(hd['numeric_features'])} numeric, {len(hd['categorical_features'])} categorical), "
             f"{hd['missing_values']} missing values; class balance: {hd['class_balance']['no_disease']} healthy vs {hd['class_balance']['disease']} with heart disease. "
             f"Preprocessing: {H['preprocessing']} After encoding there are {hd['n_features_after_encoding']} features; {hd['n_train']} training / {hd['n_test']} test samples.")
+    para(d, T.Q2_HEART_NOTE, italic=True, size=10)
     figure(d, f / "heart_eda.png", "Figure – Heart Disease: class balance and correlations.", 6.0)
     para(d, "Intel Image Classification (images, 6 classes)", bold=True)
     para(d, f"Classes: {', '.join(idd['classes'])}. {idd['n_train']} training and {idd['n_test']} test images (official split). Preprocessing: {I['preprocessing']}")
@@ -380,23 +361,10 @@ def build_q2():
     for chunk in _end_to_end(H, I):
         para(d, chunk)
 
-    d.add_heading("7. Discussion (draft – rewrite in your own words)", 1)
-    sh = pd.DataFrame(H["sweep_summary"])
-    si = pd.DataFrame(I["sweep_summary"])
-    dt_h, rf_h = H["dt_vs_rf"]
-    dt_i, rf_i = I["dt_vs_rf"]
-    para(d, "Effect of the number of trees on accuracy and stability. ", bold=True)
-    para(d, f"On Heart Disease the mean test accuracy rose from {sh.test_acc_mean.iloc[0]:.3f} (1 tree) to {sh.test_acc_mean.iloc[-1]:.3f} ({int(sh.n_estimators.iloc[-1])} trees) and the standard deviation "
-            f"across seeds fell from {sh.test_acc_std.iloc[0]:.3f} to {sh.test_acc_std.iloc[-1]:.3f}. On Intel Images accuracy went from {si.test_acc_mean.iloc[0]:.3f} to {si.test_acc_mean.iloc[-1]:.3f} "
-            f"(std {si.test_acc_std.iloc[0]:.3f} → {si.test_acc_std.iloc[-1]:.3f}). Most of the gain comes in the first tens of trees; afterwards the curve is flat – more trees mainly buy stability, in line with Breiman's convergence result.")
-    para(d, "Random Forest vs a single tree. ", bold=True)
-    para(d, f"Heart Disease: accuracy {dt_h['accuracy']:.3f} → {rf_h['accuracy']:.3f}; {_time_phrase(dt_h, rf_h, H['dataset']['n_features_after_encoding'])}. "
-            f"Intel Images: accuracy {dt_i['accuracy']:.3f} → {rf_i['accuracy']:.3f}; {_time_phrase(dt_i, rf_i, I['dataset']['n_features'])}. "
-            "In both cases the forest is clearly more accurate and less sensitive to the training data, but it is harder to interpret. "
-            "Note: on the small Heart dataset one test example is worth about 1.7 percentage points, so single-split numbers are noisy – the 5-fold cross-validation and the repeated seeds are more reliable.")
-    para(d, "Insights on randomness and ensemble size. ", bold=True)
-    para(d, "Randomness (bootstrap samples + random feature subsets) is what decorrelates the trees; without it all trees would be almost identical. A moderate ensemble (about 100 trees) is usually enough, "
-            "larger ensembles give diminishing returns. On raw image pixels all classical models are limited by the weak feature representation – convolutional networks or engineered features (HOG, colour histograms) would be needed for a big jump.")
+    d.add_heading("7. Discussion", 1)
+    for head, txt in T.Q2_DISCUSSION:
+        para(d, head + ". ", bold=True)
+        para(d, txt)
 
     d.add_heading("8. Code and reproduction", 1)
     para(d, f"GitHub repository: {cfg.get('github_url', '')}")
@@ -466,16 +434,10 @@ def build_q3():
     d.add_heading("6. Model comparison", 1)
     table(d, C["comparison"])
     figure(d, f / "model_comparison.png", "Figure 5 – Baseline vs AutoML: metrics, ROC curves and training/search time.", 6.5)
-    cmp = {r["model"]: r for r in C["comparison"]}
-    b, a = cmp["Baseline: Logistic Regression"], cmp["AutoML: TPOT"]
-    para(d, "Discussion (draft – rewrite in your own words)", bold=True)
-    para(d, f"On the test set the ROC-AUC of the baseline is {b['roc_auc']:.4f} and that of TPOT is {a['roc_auc']:.4f} (F1: {b['f1']:.4f} vs {a['f1']:.4f}). "
-            f"The baseline trained in {b['train/search time (s)']:.1f}s, the AutoML search needed {a['train/search time (s)']:.0f}s. Inference cost: {b['inference (ms/row)']:.4f} vs {a['inference (ms/row)']:.4f} ms per row; "
-            f"model size {b['file size (MB)']:.2f} MB vs {a['file size (MB)']:.2f} MB. Complexity: {b['complexity']} versus {a['complexity']}.")
-    para(d, "Advantages of the baseline: very fast, interpretable (coefficients), small and cheap to serve. Limitations: linear decision boundary, needs manual feature engineering. "
-            "Advantages of AutoML: explores many models and hyper-parameters automatically and can find non-linear combinations without manual tuning. "
-            "Limitations: long search time, non-deterministic results, possibly complex and hard-to-explain pipelines, and the improvement over a well-engineered baseline can be small.")
-    para(d, f"Selected model: {C['best_model']} (highest test ROC-AUC). Note: selecting on the test set is a small optimistic bias; a separate validation set would avoid it.")
+    para(d, "Discussion", bold=True)
+    for txt in T.Q3_DISCUSSION:
+        para(d, txt)
+    para(d, f"Selected model: {C['best_model']} (highest test ROC-AUC).")
 
     d.add_heading("7. Model saving and feature importance", 1)
     para(d, "The best complete pipeline (preprocessing + model) was saved with joblib (models/best_model.joblib) together with a metadata file (metrics, feature importances, allowed input values). "
@@ -497,7 +459,7 @@ def build_q3():
     shots = sorted((REP / "screenshots").glob("*.png")) + sorted((REP / "screenshots").glob("*.jpg")) if (REP / "screenshots").exists() else []
     if shots:
         for i, s in enumerate(shots, 1):
-            d.add_picture(str(s), width=Inches(6.0))
+            _add_img(d, s, 6.0, 6.5)
             para(d, f"Screenshot {i}", italic=True, size=9.5).alignment = WD_ALIGN_PARAGRAPH.CENTER
     else:
         para(d, "[INSERT SCREENSHOTS OF THE RUNNING APP – put them in reports/screenshots/ and re-run the builder]", bold=True)

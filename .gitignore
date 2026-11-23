@@ -7,3 +7,4 @@ data/q2_intel/*
 *.npz
 models/*.joblib
 Q3/deploy_hf/models/*.joblib
+~$*
